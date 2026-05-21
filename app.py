@@ -1,25 +1,33 @@
+
 import os, uuid, json, base64, re
 from datetime import datetime
 from flask import Flask, request, jsonify, render_template, abort
 import anthropic
+import redis
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-DATA_FILE = 'naszyjniki.json'
+def get_redis():
+    url = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+    return redis.from_url(url, decode_responses=True)
 
-def load_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {}
+def load_entry(numer):
+    try:
+        r = get_redis()
+        data = r.get(f'naszyjnik:{numer}')
+        return json.loads(data) if data else None
+    except Exception:
+        return None
 
-def save_data(data):
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+def save_entry(numer, entry):
+    try:
+        r = get_redis()
+        r.set(f'naszyjnik:{numer}', json.dumps(entry, ensure_ascii=False))
+    except Exception as e:
+        raise Exception(f'Błąd zapisu do bazy: {e}')
 
 def clean_text(text):
-    # Remove any "Tekst 1", "Tekst 2", "[opis]", "[zachęta]" prefixes
     text = re.sub(r'^(tekst\s*\d+\s*[-—:]?\s*|\[opis\]\s*|\[zachęta\]\s*)', '', text, flags=re.IGNORECASE)
     return text.strip()
 
@@ -48,22 +56,23 @@ def generuj():
         api_key = os.environ.get('ANTHROPIC_API_KEY')
         client = anthropic.Anthropic(api_key=api_key)
 
-        prompt = f"""Jesteś poetyckim twórcą opisów biżuterii z naturalnych kamieni dla marki Virelia Jewelry.
+        prompt = f"""Jesteś ekspertem od mineralogii i tradycji kryształoterapii oraz poetyckim twórcą opisów biżuterii dla marki Virelia Jewelry.
 
-Napisz dwa teksty oddzielone wyłącznie znakiem |||
-Zacznij BEZPOŚREDNIO od pierwszego słowa opisu. Absolutnie zero tytułów, zero numeracji, zero słów "Tekst", "opis", "zachęta".
+Napisz dwa teksty oddzielone znakiem |||
+Zacznij BEZPOŚREDNIO od pierwszego słowa opisu. Zero tytułów, zero numeracji, zero słów "Tekst", "opis", "zachęta".
 
-Pierwszy tekst (80-110 słów) — poetycki opis naszyjnika:
+Pierwszy tekst (80-110 słów) — poetycki opis naszyjnika oparty na PRAWDZIWYCH właściwościach kamieni:
 Kamienie: {gems}
 {f"Właściciel/ka: {client_name}" if client_name else ""}
 {f"Informacje: {notes}" if notes else ""}
-Pisz w 2. osobie do właścicielki lub właściciela.
-Opisz energetyczne i duchowe właściwości kamieni.
-Ton: mistyczny, poetycki, ciepły. Tylko po polsku.
+- Opisz PRAWDZIWE energetyczne i duchowe właściwości każdego kamienia zgodne z tradycją kryształoterapii
+- Pisz w 2. osobie bezpośrednio do właścicielki lub właściciela
+- Ton: mistyczny, poetycki, ciepły, spersonalizowany
+- Tylko po polsku
 
 Drugi tekst (max 10 słów) — krótka zachęta nad kodem QR. Tylko po polsku.
 
-Odpowiedz dokładnie tak: [opis]|||[zachęta]"""
+Format odpowiedzi: [opis]|||[zachęta]"""
 
         if photo_b64:
             message_content = [
@@ -102,9 +111,7 @@ Odpowiedz dokładnie tak: [opis]|||[zachęta]"""
             'photo': photo_data_url
         }
 
-        data = load_data()
-        data[numer] = entry
-        save_data(data)
+        save_entry(numer, entry)
 
         return jsonify({'success': True, 'numer': numer, 'description': description, 'tagline': tagline, 'date': date_str})
 
@@ -113,8 +120,7 @@ Odpowiedz dokładnie tak: [opis]|||[zachęta]"""
 
 @app.route('/naszyjnik/<numer>')
 def naszyjnik(numer):
-    data = load_data()
-    entry = data.get(numer)
+    entry = load_entry(numer)
     if not entry:
         abort(404)
     return render_template('naszyjnik.html', **entry)
