@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virelia Jewelry — Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-l:#E8D5A0;--gold-d:#7A5C10;
+  --obs:#08080E;--obs2:#111118;--obs3:#18181F;--obs4:#20202A;
+  --cream:#F2E8D0;--cream-m:#B8A888;--dim:#5A5A7A;
+}
+html,body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--obs);color:var(--cream);min-height:100vh;margin:0}
+.app{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+
+.studio{background:var(--obs2);border-right:1px solid rgba(201,168,76,0.15);padding:1.6rem 1.5rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
+.hdr{display:flex;align-items:center;gap:0.7rem;padding-bottom:1rem;border-bottom:1px solid rgba(201,168,76,0.13)}
+.brand{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:0.14em;color:var(--gold)}
+.brand-sub{font-size:9px;color:var(--dim);letter-spacing:0.08em;margin-top:2px}
+.lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:0.3rem}
+input[type=text],textarea{background:var(--obs3);border:1px solid rgba(201,168,76,0.18);border-radius:3px;color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:15px;padding:0.48rem 0.72rem;outline:none;transition:border-color 0.2s;width:100%}
+input[type=text]:focus,textarea:focus{border-color:rgba(201,168,76,0.5)}
+input[type=text]::placeholder,textarea::placeholder{color:var(--dim);font-style:italic}
+textarea{resize:vertical;min-height:54px;line-height:1.5}
+
+.upload-zone{border:1px dashed rgba(201,168,76,0.25);border-radius:5px;position:relative;background:var(--obs3);height:250px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;transition:border-color 0.2s}
+.upload-zone:hover{border-color:rgba(201,168,76,0.5)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.up-ph{display:flex;flex-direction:column;align-items:center;gap:0.45rem;pointer-events:none}
+.up-ph svg{opacity:0.28}
+.up-txt{font-size:11px;color:var(--dim);font-style:italic}
+.up-sub{font-size:9px;color:var(--dim);opacity:0.5}
+#upPrev{width:100%;height:100%;object-fit:contain;display:none;padding:6px}
+
+.gems-grid{display:flex;flex-wrap:wrap;gap:0.28rem;margin-bottom:0.25rem}
+.gem-tag{padding:0.2rem 0.55rem;border:1px solid rgba(201,168,76,0.2);border-radius:20px;font-size:11px;cursor:pointer;transition:all 0.15s;color:var(--cream-m);background:transparent;font-family:'Cormorant Garamond',serif;user-select:none}
+.gem-tag:hover{border-color:rgba(201,168,76,0.55);color:var(--gold-l)}
+.gem-tag.on{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold-l)}
+.hint{font-size:9px;color:var(--dim);font-style:italic;margin-bottom:0.25rem}
+
+.btn-gen{background:linear-gradient(135deg,#6B4E0A,var(--gold),#6B4E0A);border:none;border-radius:2px;color:#08080E;font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.2em;padding:0.8rem;cursor:pointer;text-transform:uppercase;transition:opacity 0.2s,transform 0.1s;width:100%}
+.btn-gen:hover{opacity:0.88;transform:translateY(-1px)}
+.btn-gen:active{transform:translateY(0)}
+.btn-gen:disabled{opacity:0.35;cursor:not-allowed;transform:none}
+.err{color:#c0392b;font-size:10px;font-style:italic;min-height:14px}
+
+.preview{background:var(--obs);padding:1.6rem 1.5rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
+.prev-hdr{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;padding-bottom:0.8rem;border-bottom:1px solid rgba(201,168,76,0.1)}
+
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:0.8rem;opacity:0.2;text-align:center;padding:2rem}
+.empty-orn{font-size:1.8rem;color:var(--gold)}
+.empty p{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--cream-m);line-height:1.65}
+
+.card{background:var(--obs2);border:1px solid rgba(201,168,76,0.22);border-radius:6px;overflow:hidden;display:none;animation:fi 0.4s ease}
+.card.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.card-img-wrap{position:relative;width:100%;height:300px;background:var(--obs3);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card-img-wrap img{width:100%;height:100%;object-fit:contain;padding:6px;display:none}
+.card-fade{position:absolute;bottom:0;left:0;right:0;height:65px;background:linear-gradient(transparent,var(--obs2));pointer-events:none}
+
+.card-body{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:0.8rem}
+.card-title{font-family:'Cinzel',serif;font-size:15px;font-weight:400;color:var(--cream);line-height:1.3}
+.card-meta{display:flex;gap:1rem;font-size:10px;color:var(--dim)}
+.card-meta b{color:var(--gold);font-weight:400}
+.hr{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.26),transparent)}
+.stones{display:flex;flex-wrap:wrap;gap:0.28rem}
+.stone{padding:0.17rem 0.52rem;border:1px solid rgba(201,168,76,0.26);border-radius:20px;font-size:10px;color:var(--gold-l)}
+.desc{font-family:'IM Fell English',serif;font-size:13px;line-height:1.9;color:var(--cream-m);font-style:italic;min-height:2em}
+@keyframes sh{0%,100%{opacity:0.2}50%{opacity:0.6}}
+.desc.loading{animation:sh 1.5s ease-in-out infinite}
+.card-foot{border-top:1px solid rgba(201,168,76,0.08);padding-top:0.35rem}
+.foot-lbl{font-family:'Cinzel',serif;font-size:8px;color:var(--dim);letter-spacing:0.1em}
+
+.link-box{background:var(--obs3);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:0.6rem 0.8rem;display:none;flex-direction:column;gap:0.3rem}
+.link-box.on{display:flex}
+.link-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase}
+.link-url{font-size:11px;color:var(--cream-m);word-break:break-all;font-family:monospace}
+.btn-copy{background:transparent;border:1px solid rgba(201,168,76,0.3);border-radius:2px;color:var(--gold);font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:0.1em;padding:0.3rem 0.6rem;cursor:pointer;text-transform:uppercase;transition:all 0.18s;align-self:flex-start;margin-top:0.1rem}
+.btn-copy:hover{background:rgba(201,168,76,0.08)}
+
+.qr-sec{background:var(--obs2);border:1px solid rgba(201,168,76,0.14);border-radius:6px;overflow:hidden;display:none;animation:fi 0.4s ease}
+.qr-sec.on{display:block}
+.qr-tagline-wrap{padding:0.85rem 1.1rem 0.65rem;text-align:center;border-bottom:1px solid rgba(201,168,76,0.1)}
+.qr-tagline{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--gold-l);line-height:1.5;letter-spacing:0.02em}
+.qr-tagline::before,.qr-tagline::after{content:' ✦ ';color:rgba(201,168,76,0.35);font-size:10px}
+.qr-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.1rem}
+.qr-frame{background:white;border-radius:3px;padding:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:88px;height:88px}
+.qr-frame canvas,.qr-frame img{width:78px!important;height:78px!important}
+.qr-info{flex:1;display:flex;flex-direction:column;gap:0.3rem}
+.qr-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.13em;color:var(--gold);text-transform:uppercase}
+.qr-note{font-size:10px;color:var(--dim);line-height:1.5;font-style:italic}
+.dl-btns{display:flex;gap:0.35rem;margin-top:0.2rem;flex-wrap:wrap}
+.btn-dl{background:transparent;border:1px solid rgba(201,168,76,0.32);border-radius:2px;color:var(--gold);font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:0.1em;padding:0.35rem 0.6rem;cursor:pointer;text-transform:uppercase;transition:all 0.18s}
+.btn-dl:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="studio">
+    <div class="hdr">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+        <polygon points="16,3 29,11 29,21 16,29 3,21 3,11" fill="none" stroke="#C9A84C" stroke-width="1.1"/>
+        <polygon points="16,3 29,11 16,13 3,11" fill="rgba(201,168,76,0.13)" stroke="#C9A84C" stroke-width="0.5"/>
+        <polygon points="3,11 16,13 16,29" fill="rgba(201,168,76,0.07)" stroke="#C9A84C" stroke-width="0.5"/>
+        <polygon points="29,11 16,13 16,29" fill="rgba(201,168,76,0.1)" stroke="#C9A84C" stroke-width="0.5"/>
+      </svg>
+      <div>
+        <div class="brand">Virelia Jewelry</div>
+        <div class="brand-sub">Generator opisów biżuterii</div>
+      </div>
+    </div>
+
+    <div><span class="lbl">Imię klientki / klienta</span>
+      <input type="text" id="clientName" placeholder="np. Anna, Marek..."/></div>
+
+    <div><span class="lbl">Zdjęcie naszyjnika</span>
+      <div class="upload-zone">
+        <input type="file" id="photoInput" accept="image/*"/>
+        <div class="up-ph" id="upPh">
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <rect x="4" y="24" width="32" height="12" rx="2" stroke="#C9A84C" stroke-width="1.1"/>
+            <path d="M20 4L20 22M13 11L20 4L27 11" stroke="#C9A84C" stroke-width="1.1" stroke-linecap="round"/>
+          </svg>
+          <div class="up-txt">Kliknij lub upuść zdjęcie</div>
+          <div class="up-sub">Cały naszyjnik będzie widoczny</div>
+        </div>
+        <img id="upPrev"/>
+      </div>
+    </div>
+
+    <div><span class="lbl">Kamienie w naszyjniku</span>
+      <div class="gems-grid">
+        <div class="gem-tag" data-gem="Ametyst" onclick="tg(this)">✦ Ametyst</div>
+        <div class="gem-tag" data-gem="Kwarc różowy" onclick="tg(this)">✦ Kwarc różowy</div>
+        <div class="gem-tag" data-gem="Labradoryt" onclick="tg(this)">✦ Labradoryt</div>
+        <div class="gem-tag" data-gem="Malachit" onclick="tg(this)">✦ Malachit</div>
+        <div class="gem-tag" data-gem="Lapis lazuli" onclick="tg(this)">✦ Lapis lazuli</div>
+        <div class="gem-tag" data-gem="Czarny turmalin" onclick="tg(this)">✦ Czarny turmalin</div>
+        <div class="gem-tag" data-gem="Obsydian" onclick="tg(this)">✦ Obsydian</div>
+        <div class="gem-tag" data-gem="Czarny kryształ" onclick="tg(this)">✦ Czarny kryształ</div>
+        <div class="gem-tag" data-gem="Cytryn" onclick="tg(this)">✦ Cytryn</div>
+        <div class="gem-tag" data-gem="Opal" onclick="tg(this)">✦ Opal</div>
+        <div class="gem-tag" data-gem="Awenturyn" onclick="tg(this)">✦ Awenturyn</div>
+        <div class="gem-tag" data-gem="Kwarc dymny" onclick="tg(this)">✦ Kwarc dymny</div>
+        <div class="gem-tag" data-gem="Moonstone" onclick="tg(this)">✦ Moonstone</div>
+        <div class="gem-tag" data-gem="Karneol" onclick="tg(this)">✦ Karneol</div>
+        <div class="gem-tag" data-gem="Hematyt" onclick="tg(this)">✦ Hematyt</div>
+        <div class="gem-tag" data-gem="Tygrysie oko" onclick="tg(this)">✦ Tygrysie oko</div>
+        <div class="gem-tag" data-gem="Różaniec" onclick="tg(this)">✦ Różaniec</div>
+        <div class="gem-tag" data-gem="Sodalit" onclick="tg(this)">✦ Sodalit</div>
+      </div>
+      <p class="hint">Lub wpisz własne (po przecinku):</p>
+      <input type="text" id="customGems" placeholder="np. Rubin, Szafir..."/>
+    </div>
+
+    <div><span class="lbl">Dodatkowe informacje (opcjonalnie)</span>
+      <textarea id="extraNotes" placeholder="np. złota zawieszka księżyc, długość 42cm, srebrny łańcuszek..."></textarea>
+    </div>
+
+    <div class="err" id="errMsg"></div>
+    <button class="btn-gen" id="genBtn" onclick="generate()">✦ &nbsp; Generuj opis &nbsp; ✦</button>
+  </div>
+
+  <div class="preview">
+    <div class="prev-hdr">Podgląd karty klienta</div>
+    <div class="empty" id="emptyState">
+      <div class="empty-orn">◈</div>
+      <p>Wypełnij formularz i wygeneruj unikalną kartę dla swojego klienta</p>
+    </div>
+
+    <div class="card" id="card">
+      <div class="card-img-wrap" id="cardImgWrap">
+        <svg width="44" height="44" viewBox="0 0 60 60" fill="none" id="imgPh" style="opacity:0.13">
+          <polygon points="30,5 55,19 55,41 30,55 5,41 5,19" stroke="#C9A84C" stroke-width="1" fill="none"/>
+          <polygon points="30,5 55,19 30,25 5,19" fill="rgba(201,168,76,0.1)" stroke="#C9A84C" stroke-width="0.5"/>
+        </svg>
+        <img id="cardImg"/>
+        <div class="card-fade"></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title" id="cardTitle">Twój naszyjnik</div>
+        <div class="card-meta"><div>Data: <b id="cardDate"></b></div><div>Nr: <b id="cardNum"></b></div></div>
+        <div class="hr"></div>
+        <div class="stones" id="cardStones"></div>
+        <div class="desc" id="cardDesc"></div>
+        <div class="hr"></div>
+        <div class="card-foot"><div class="foot-lbl">Virelia Jewelry &nbsp;·&nbsp; Biżuteria z Naturalnych Kamieni</div></div>
+      </div>
+    </div>
+
+    <div class="link-box" id="linkBox">
+      <div class="link-label">Link dla klienta</div>
+      <div class="link-url" id="linkUrl"></div>
+      <button class="btn-copy" onclick="copyLink()">Kopiuj link</button>
+    </div>
+
+    <div class="qr-sec" id="qrSec">
+      <div class="qr-tagline-wrap"><div class="qr-tagline" id="qrTagline"></div></div>
+      <div class="qr-row">
+        <div class="qr-frame" id="qrFrame"></div>
+        <div class="qr-info">
+          <div class="qr-lbl">Kod QR do wydruku</div>
+          <div class="qr-note">Dołącz do przesyłki — klient zeskanuje i odkryje historię swojego naszyjnika</div>
+          <div class="dl-btns">
+            <button class="btn-dl" onclick="dlQR()">↓ QR PNG</button>
+            <button class="btn-dl" onclick="dlCard()">↓ Karta HD</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let gems=[],photoFile=null,desc='',tagline='',allGemsArr=[],cName='',cNum='',cDate='',cardUrl='';
+
+document.getElementById('photoInput').addEventListener('change',function(e){
+  const f=e.target.files[0];if(!f)return;
+  photoFile=f;
+  const r=new FileReader();
+  r.onload=ev=>{
+    document.getElementById('upPrev').src=ev.target.result;
+    document.getElementById('upPrev').style.display='block';
+    document.getElementById('upPh').style.display='none';
+    document.getElementById('cardImg').src=ev.target.result;
+    document.getElementById('cardImg').style.display='block';
+    document.getElementById('imgPh').style.display='none';
+  };
+  r.readAsDataURL(f);
+});
+
+function tg(el){
+  const g=el.dataset.gem,i=gems.indexOf(g);
+  if(i>-1){gems.splice(i,1);el.classList.remove('on');}
+  else{gems.push(g);el.classList.add('on');}
+}
+
+function setErr(m){document.getElementById('errMsg').textContent=m;}
+
+async function generate(){
+  setErr('');
+  cName=document.getElementById('clientName').value.trim();
+  const cg=document.getElementById('customGems').value.trim();
+  const notes=document.getElementById('extraNotes').value.trim();
+  allGemsArr=[...gems];
+  if(cg)cg.split(',').forEach(g=>{const t=g.trim();if(t)allGemsArr.push(t);});
+  if(!allGemsArr.length){setErr('Wybierz lub wpisz przynajmniej jeden kamień.');return;}
+
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;btn.textContent='✦  Generowanie...  ✦';
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('card').classList.add('on');
+
+  const descEl=document.getElementById('cardDesc');
+  descEl.textContent='Tkam słowa dla Twojego naszyjnika...';
+  descEl.classList.add('loading');
+
+  const fd=new FormData();
+  fd.append('client_name',cName);
+  fd.append('gems',allGemsArr.join(', '));
+  fd.append('notes',notes);
+  if(photoFile)fd.append('photo',photoFile);
+
+  try{
+    const res=await fetch('/generuj',{method:'POST',body:fd});
+    const data=await res.json();
+    if(!res.ok||data.error)throw new Error(data.error||'Błąd serwera');
+
+    desc=data.description;
+    tagline=data.tagline;
+    cNum=data.numer;
+    cDate=data.date;
+    cardUrl=window.location.origin+'/naszyjnik/'+cNum;
+
+    document.getElementById('cardTitle').textContent=cName?`Twój naszyjnik, ${cName}`:'Twój wyjątkowy naszyjnik';
+    document.getElementById('cardDate').textContent=cDate;
+    document.getElementById('cardNum').textContent=cNum;
+    document.getElementById('cardStones').innerHTML=allGemsArr.map(g=>`<span class="stone">✦ ${g}</span>`).join('');
+    descEl.textContent=desc;
+    descEl.classList.remove('loading');
+
+    document.getElementById('linkUrl').textContent=cardUrl;
+    document.getElementById('linkBox').classList.add('on');
+    buildQR();
+  }catch(e){
+    descEl.classList.remove('loading');descEl.textContent='';
+    setErr('Błąd: '+e.message);
+  }
+  btn.disabled=false;btn.innerHTML='✦ &nbsp; Generuj opis &nbsp; ✦';
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(cardUrl).then(()=>{
+    const b=document.querySelector('.btn-copy');
+    b.textContent='Skopiowano!';setTimeout(()=>b.textContent='Kopiuj link',2000);
+  });
+}
+
+function buildQR(){
+  const frame=document.getElementById('qrFrame');
+  frame.innerHTML='';
+  document.getElementById('qrTagline').textContent=tagline;
+  new QRCode(frame,{text:cardUrl,width:78,height:78,colorDark:'#08080E',colorLight:'#FFFFFF',correctLevel:QRCode.CorrectLevel.M});
+  document.getElementById('qrSec').classList.add('on');
+}
+
+function dlQR(){
+  const c=document.getElementById('qrFrame').querySelector('canvas');
+  if(!c)return;
+  const s=5,sz=78*s,out=document.createElement('canvas');
+  out.width=sz;out.height=sz;
+  const ctx=out.getContext('2d');ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(c,0,0,sz,sz);
+  const a=document.createElement('a');a.download='virelia-qr-'+cNum+'.png';a.href=out.toDataURL('image/png');a.click();
+}
+
+function dlCard(){
+  if(!desc){alert('Najpierw wygeneruj opis.');return;}
+  const W=1200,H=1850,cv=document.createElement('canvas');
+  cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#08080E';ctx.fillRect(0,0,W,H);
+  const draw=()=>{
+    ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1.5;ctx.strokeRect(28,28,W-56,H-56);
+    ctx.strokeStyle='rgba(201,168,76,0.1)';ctx.lineWidth=1;ctx.strokeRect(36,36,W-72,H-72);
+    ctx.textAlign='center';
+    ctx.fillStyle='#C9A84C';ctx.font='600 46px Georgia,serif';ctx.fillText('VIRELIA JEWELRY',W/2,108);
+    ctx.fillStyle='rgba(201,168,76,0.5)';ctx.font='300 22px Georgia,serif';ctx.fillText('Biżuteria z Naturalnych Kamieni',W/2,142);
+    ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(90,165);ctx.lineTo(W-90,165);ctx.stroke();
+    let y=195;
+    const cardImgEl=document.getElementById('cardImg');
+    if(cardImgEl.src&&cardImgEl.style.display!=='none'){
+      const img=new Image();
+      img.onload=function(){
+        const mh=520,mw=W-160,sc=Math.min(mw/img.width,mh/img.height);
+        const dw=img.width*sc,dh=img.height*sc,dx=(W-dw)/2;
+        ctx.save();ctx.beginPath();ctx.roundRect(dx,y,dw,dh,5);ctx.clip();
+        ctx.drawImage(img,dx,y,dw,dh);ctx.restore();
+        y+=dh+55;finish(ctx,W,y,cv);
+      };img.src=cardImgEl.src;
+    }else{finish(ctx,W,y,cv);}
+  };draw();
+}
+
+function finish(ctx,W,y,cv){
+  ctx.textAlign='center';
+  ctx.fillStyle='#F2E8D0';ctx.font='400 44px Georgia,serif';
+  ctx.fillText(cName?`Twój naszyjnik, ${cName}`:'Twój wyjątkowy naszyjnik',W/2,y);y+=54;
+  ctx.fillStyle='#5A5A7A';ctx.font='300 21px Georgia,serif';
+  ctx.fillText(cDate+' · '+cNum,W/2,y);y+=46;
+  ctx.strokeStyle='rgba(201,168,76,0.18)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(90,y);ctx.lineTo(W-90,y);ctx.stroke();y+=38;
+  ctx.fillStyle='#C9A84C';ctx.font='400 23px Georgia,serif';
+  ctx.fillText('✦  '+allGemsArr.join('  ·  ')+'  ✦',W/2,y);y+=46;
+  ctx.beginPath();ctx.moveTo(90,y);ctx.lineTo(W-90,y);ctx.stroke();y+=50;
+  ctx.fillStyle='#B8A888';ctx.font='italic 400 28px Georgia,serif';
+  const words=desc.split(' '),mw=W-220;let line='',lines=[];
+  for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>mw&&line){lines.push(line);line=w;}else line=t;}
+  if(line)lines.push(line);
+  for(const l of lines){ctx.fillText(l,W/2,y);y+=43;}
+  y+=38;
+  ctx.fillStyle='rgba(201,168,76,0.45)';ctx.font='italic 400 22px Georgia,serif';
+  ctx.fillText('✦  '+tagline+'  ✦',W/2,y);y+=50;
+  ctx.strokeStyle='rgba(201,168,76,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(160,y);ctx.lineTo(W-160,y);ctx.stroke();y+=40;
+  ctx.fillStyle='rgba(201,168,76,0.45)';ctx.font='600 15px Georgia,serif';
+  ctx.fillText('VIRELIA JEWELRY  ·  BIŻUTERIA Z NATURALNYCH KAMIENI',W/2,y);
+  const a=document.createElement('a');a.download='virelia-karta-'+cNum+'.png';a.href=cv.toDataURL('image/png',1);a.click();
+}
+</script>
+</body>
+</html>

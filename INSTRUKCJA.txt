@@ -1,0 +1,86 @@
+# VIRELIA JEWELRY — Instrukcja uruchomienia aplikacji
+# Krok po kroku dla Windows
+
+=====================================================
+KROK 1 — Zainstaluj Python
+=====================================================
+1. Wejdź na: https://www.python.org/downloads/
+2. Kliknij "Download Python 3.x.x"
+3. Uruchom instalator
+4. WAŻNE: zaznacz "Add Python to PATH" na dole
+5. Kliknij "Install Now"
+
+=====================================================
+KROK 2 — Zainstaluj Git
+=====================================================
+1. Wejdź na: https://git-scm.com/download/win
+2. Pobierz i zainstaluj (klikaj "Next" przez całą instalację)
+
+=====================================================
+KROK 3 — Załóż konto GitHub (darmowe)
+=====================================================
+1. Wejdź na: https://github.com
+2. Zarejestruj się (Sign Up)
+3. Potwierdź email
+
+=====================================================
+KROK 4 — Wgraj aplikację na GitHub
+=====================================================
+1. Wejdź na GitHub → kliknij "+" → "New repository"
+2. Nazwa: virelia-jewelry
+3. Kliknij "Create repository"
+4. Otwórz folder z aplikacją w Eksploratorze plików
+5. Kliknij prawym przyciskiem w folderze → "Git Bash Here"
+6. Wpisz kolejno (Enter po każdej linii):
+
+   git init
+   git add .
+   git commit -m "first commit"
+   git branch -M main
+   git remote add origin https://github.com/TWOJA_NAZWA/virelia-jewelry.git
+   git push -u origin main
+
+   (zastąp TWOJA_NAZWA swoją nazwą użytkownika GitHub)
+
+=====================================================
+KROK 5 — Wdróż na Render.com (darmowy hosting)
+=====================================================
+1. Wejdź na: https://render.com
+2. Kliknij "Sign Up" → zaloguj się przez GitHub
+3. Kliknij "New +" → "Web Service"
+4. Wybierz repozytorium "virelia-jewelry"
+5. Ustaw:
+   - Name: virelia-jewelry
+   - Runtime: Python 3
+   - Build Command: pip install -r requirements.txt
+   - Start Command: gunicorn app:app
+6. Kliknij "Advanced" → "Add Environment Variable":
+   - Key:   ANTHROPIC_API_KEY
+   - Value: (wklej swój klucz zaczynający się od sk-ant-...)
+7. Kliknij "Create Web Service"
+8. Poczekaj 2-3 minuty aż Render zbuduje aplikację
+9. Twój adres to np.: https://virelia-jewelry.onrender.com
+
+=====================================================
+GOTOWE!
+=====================================================
+Twoja aplikacja działa pod adresem z Render.com
+
+Otwórz ten adres w przeglądarce → generuj opisy →
+kody QR będą prowadzić do prawdziwych stron klientów!
+
+Każda strona klienta ma unikalny link np.:
+https://virelia-jewelry.onrender.com/naszyjnik/VJ-A1B2C3
+
+=====================================================
+UWAGA — Darmowy plan Render
+=====================================================
+Na darmowym planie aplikacja "zasypia" po 15 min
+bezczynności i pierwsze wejście może trwać ~30 sekund.
+Dla klientów to nie problem — ich strona zawsze działa.
+Jeśli chcesz szybsze działanie: plan Starter = $7/miesiąc.
+
+=====================================================
+PYTANIA?
+=====================================================
+W razie problemów wróć do Claude i opisz co się stało.
