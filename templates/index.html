@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -309,18 +310,19 @@ function dlLabel(){
   ctx.beginPath();ctx.moveTo(W*0.15,48);ctx.lineTo(W*0.85,48);ctx.stroke();
   const qrCanvas=document.getElementById('qrFrame').querySelector('canvas');
   if(qrCanvas){
-    const qrSize=Math.round(H*0.52);
+    const qrSize=Math.round(H*0.58);
     const qrX=(W-qrSize)/2;
-    const qrY=Math.round(H*0.19);
+    const qrY=Math.round(H*0.13);
     ctx.drawImage(qrCanvas,qrX,qrY,qrSize,qrSize);
+    const qrBottom=qrY+qrSize;
+    ctx.strokeStyle='#C9A84C';
+    ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(W*0.15,qrBottom+14);ctx.lineTo(W*0.85,qrBottom+14);ctx.stroke();
+    ctx.fillStyle='#333333';
+    ctx.font='italic 600 38px Georgia,serif';
+    ctx.fillText('Zeskanuj i odkryj histori\u0119',W/2,qrBottom+56);
+    ctx.fillText('swojego naszyjnika \u2756',W/2,qrBottom+100);
   }
-  ctx.strokeStyle='#C9A84C';
-  ctx.lineWidth=0.8;
-  ctx.beginPath();ctx.moveTo(W*0.15,H-68);ctx.lineTo(W*0.85,H-68);ctx.stroke();
-  ctx.fillStyle='#444444';
-  ctx.font='italic 400 18px Georgia,serif';
-  ctx.fillText('Zeskanuj i odkryj historię',W/2,H-48);
-  ctx.fillText('swojego naszyjnika \u2756',W/2,H-26);
   const a=document.createElement('a');
   a.download='virelia-etykieta-'+cNum+'.png';
   a.href=cv.toDataURL('image/png',1);
