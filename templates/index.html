@@ -207,6 +207,7 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
           <div class="qr-note">Dołącz do przesyłki — klient zeskanuje i odkryje historię swojego naszyjnika</div>
           <div class="dl-btns">
             <button class="btn-dl" onclick="dlQR()">↓ QR PNG</button>
+            <button class="btn-dl" onclick="dlLabel()">↓ Etykieta</button>
             <button class="btn-dl" onclick="dlCard()">↓ Karta HD</button>
           </div>
         </div>
@@ -371,6 +372,43 @@ function finish(ctx,W,y,cv){
   ctx.fillStyle='rgba(201,168,76,0.45)';ctx.font='600 15px Georgia,serif';
   ctx.fillText('VIRELIA JEWELRY  ·  BIŻUTERIA Z NATURALNYCH KAMIENI',W/2,y);
   const a=document.createElement('a');a.download='virelia-karta-'+cNum+'.png';a.href=cv.toDataURL('image/png',1);a.click();
+
+function dlLabel(){
+  if(!cardUrl){alert("Najpierw wygeneruj opis.");return;}
+  const PX_PER_MM=11.811;
+  const W=Math.round(62*PX_PER_MM);
+  const H=Math.round(60*PX_PER_MM);
+  const cv=document.createElement("canvas");
+  cv.width=W;cv.height=H;
+  const ctx=cv.getContext("2d");
+  ctx.fillStyle="#ffffff";
+  ctx.fillRect(0,0,W,H);
+  ctx.textAlign="center";
+  ctx.fillStyle="#1a1a1a";
+  ctx.font="600 22px Georgia,serif";
+  ctx.fillText("VIRELIA JEWELRY",W/2,38);
+  ctx.strokeStyle="#C9A84C";
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(W*0.15,48);ctx.lineTo(W*0.85,48);ctx.stroke();
+  const qrCanvas=document.getElementById("qrFrame").querySelector("canvas");
+  if(qrCanvas){
+    const qrSize=Math.round(H*0.52);
+    const qrX=(W-qrSize)/2;
+    const qrY=Math.round(H*0.19);
+    ctx.drawImage(qrCanvas,qrX,qrY,qrSize,qrSize);
+  }
+  ctx.strokeStyle="#C9A84C";
+  ctx.lineWidth=0.8;
+  ctx.beginPath();ctx.moveTo(W*0.15,H-68);ctx.lineTo(W*0.85,H-68);ctx.stroke();
+  ctx.fillStyle="#444444";
+  ctx.font="italic 400 18px Georgia,serif";
+  ctx.fillText("Zeskanuj i odkryj historiu0119",W/2,H-48);
+  ctx.fillText("swojego naszyjnika u2756",W/2,H-26);
+  const a=document.createElement("a");
+  a.download="virelia-etykieta-"+cNum+".png";
+  a.href=cv.toDataURL("image/png",1);
+  a.click();
+}
 }
 </script>
 </body>
