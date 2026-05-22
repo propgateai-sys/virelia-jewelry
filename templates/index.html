@@ -1,4 +1,5 @@
-     <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
@@ -8,14 +9,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#C9A84C;--gold-l:#E8D5A0;--gold-d:#7A5C10;
-  --obs:#08080E;--obs2:#111118;--obs3:#18181F;--obs4:#20202A;
-  --cream:#F2E8D0;--cream-m:#B8A888;--dim:#5A5A7A;
-}
+:root{--gold:#C9A84C;--gold-l:#E8D5A0;--gold-d:#7A5C10;--obs:#08080E;--obs2:#111118;--obs3:#18181F;--obs4:#20202A;--cream:#F2E8D0;--cream-m:#B8A888;--dim:#5A5A7A}
 html,body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--obs);color:var(--cream);min-height:100vh;margin:0}
 .app{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
-
 .studio{background:var(--obs2);border-right:1px solid rgba(201,168,76,0.15);padding:1.6rem 1.5rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
 .hdr{display:flex;align-items:center;gap:0.7rem;padding-bottom:1rem;border-bottom:1px solid rgba(201,168,76,0.13)}
 .brand{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:0.14em;color:var(--gold)}
@@ -25,7 +21,6 @@ input[type=text],textarea{background:var(--obs3);border:1px solid rgba(201,168,7
 input[type=text]:focus,textarea:focus{border-color:rgba(201,168,76,0.5)}
 input[type=text]::placeholder,textarea::placeholder{color:var(--dim);font-style:italic}
 textarea{resize:vertical;min-height:54px;line-height:1.5}
-
 .upload-zone{border:1px dashed rgba(201,168,76,0.25);border-radius:5px;position:relative;background:var(--obs3);height:250px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;transition:border-color 0.2s}
 .upload-zone:hover{border-color:rgba(201,168,76,0.5)}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -34,34 +29,27 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
 .up-txt{font-size:11px;color:var(--dim);font-style:italic}
 .up-sub{font-size:9px;color:var(--dim);opacity:0.5}
 #upPrev{width:100%;height:100%;object-fit:contain;display:none;padding:6px}
-
 .gems-grid{display:flex;flex-wrap:wrap;gap:0.28rem;margin-bottom:0.25rem}
 .gem-tag{padding:0.2rem 0.55rem;border:1px solid rgba(201,168,76,0.2);border-radius:20px;font-size:11px;cursor:pointer;transition:all 0.15s;color:var(--cream-m);background:transparent;font-family:'Cormorant Garamond',serif;user-select:none}
 .gem-tag:hover{border-color:rgba(201,168,76,0.55);color:var(--gold-l)}
 .gem-tag.on{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold-l)}
 .hint{font-size:9px;color:var(--dim);font-style:italic;margin-bottom:0.25rem}
-
 .btn-gen{background:linear-gradient(135deg,#6B4E0A,var(--gold),#6B4E0A);border:none;border-radius:2px;color:#08080E;font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.2em;padding:0.8rem;cursor:pointer;text-transform:uppercase;transition:opacity 0.2s,transform 0.1s;width:100%}
 .btn-gen:hover{opacity:0.88;transform:translateY(-1px)}
 .btn-gen:active{transform:translateY(0)}
 .btn-gen:disabled{opacity:0.35;cursor:not-allowed;transform:none}
 .err{color:#c0392b;font-size:10px;font-style:italic;min-height:14px}
-
 .preview{background:var(--obs);padding:1.6rem 1.5rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
 .prev-hdr{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;padding-bottom:0.8rem;border-bottom:1px solid rgba(201,168,76,0.1)}
-
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:0.8rem;opacity:0.2;text-align:center;padding:2rem}
 .empty-orn{font-size:1.8rem;color:var(--gold)}
 .empty p{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--cream-m);line-height:1.65}
-
 .card{background:var(--obs2);border:1px solid rgba(201,168,76,0.22);border-radius:6px;overflow:hidden;display:none;animation:fi 0.4s ease}
 .card.on{display:block}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
 .card-img-wrap{position:relative;width:100%;height:300px;background:var(--obs3);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .card-img-wrap img{width:100%;height:100%;object-fit:contain;padding:6px;display:none}
 .card-fade{position:absolute;bottom:0;left:0;right:0;height:65px;background:linear-gradient(transparent,var(--obs2));pointer-events:none}
-
 .card-body{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:0.8rem}
 .card-title{font-family:'Cinzel',serif;font-size:15px;font-weight:400;color:var(--cream);line-height:1.3}
 .card-meta{display:flex;gap:1rem;font-size:10px;color:var(--dim)}
@@ -74,14 +62,12 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
 .desc.loading{animation:sh 1.5s ease-in-out infinite}
 .card-foot{border-top:1px solid rgba(201,168,76,0.08);padding-top:0.35rem}
 .foot-lbl{font-family:'Cinzel',serif;font-size:8px;color:var(--dim);letter-spacing:0.1em}
-
 .link-box{background:var(--obs3);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:0.6rem 0.8rem;display:none;flex-direction:column;gap:0.3rem}
 .link-box.on{display:flex}
 .link-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase}
 .link-url{font-size:11px;color:var(--cream-m);word-break:break-all;font-family:monospace}
 .btn-copy{background:transparent;border:1px solid rgba(201,168,76,0.3);border-radius:2px;color:var(--gold);font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:0.1em;padding:0.3rem 0.6rem;cursor:pointer;text-transform:uppercase;transition:all 0.18s;align-self:flex-start;margin-top:0.1rem}
 .btn-copy:hover{background:rgba(201,168,76,0.08)}
-
 .qr-sec{background:var(--obs2);border:1px solid rgba(201,168,76,0.14);border-radius:6px;overflow:hidden;display:none;animation:fi 0.4s ease}
 .qr-sec.on{display:block}
 .qr-tagline-wrap{padding:0.85rem 1.1rem 0.65rem;text-align:center;border-bottom:1px solid rgba(201,168,76,0.1)}
@@ -113,10 +99,8 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
         <div class="brand-sub">Generator opisów biżuterii</div>
       </div>
     </div>
-
     <div><span class="lbl">Imię klientki / klienta</span>
       <input type="text" id="clientName" placeholder="np. Anna, Marek..."/></div>
-
     <div><span class="lbl">Zdjęcie naszyjnika</span>
       <div class="upload-zone">
         <input type="file" id="photoInput" accept="image/*"/>
@@ -131,7 +115,6 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
         <img id="upPrev"/>
       </div>
     </div>
-
     <div><span class="lbl">Kamienie w naszyjniku</span>
       <div class="gems-grid">
         <div class="gem-tag" data-gem="Ametyst" onclick="tg(this)">✦ Ametyst</div>
@@ -156,11 +139,9 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
       <p class="hint">Lub wpisz własne (po przecinku):</p>
       <input type="text" id="customGems" placeholder="np. Rubin, Szafir..."/>
     </div>
-
     <div><span class="lbl">Dodatkowe informacje (opcjonalnie)</span>
-      <textarea id="extraNotes" placeholder="np. złota zawieszka księżyc, długość 42cm, srebrny łańcuszek..."></textarea>
+      <textarea id="extraNotes" placeholder="np. złota zawieszka księżyc, długość 42cm..."></textarea>
     </div>
-
     <div class="err" id="errMsg"></div>
     <button class="btn-gen" id="genBtn" onclick="generate()">✦ &nbsp; Generuj opis &nbsp; ✦</button>
   </div>
@@ -171,7 +152,6 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
       <div class="empty-orn">◈</div>
       <p>Wypełnij formularz i wygeneruj unikalną kartę dla swojego klienta</p>
     </div>
-
     <div class="card" id="card">
       <div class="card-img-wrap" id="cardImgWrap">
         <svg width="44" height="44" viewBox="0 0 60 60" fill="none" id="imgPh" style="opacity:0.13">
@@ -191,13 +171,11 @@ textarea{resize:vertical;min-height:54px;line-height:1.5}
         <div class="card-foot"><div class="foot-lbl">Virelia Jewelry &nbsp;·&nbsp; Biżuteria z Naturalnych Kamieni</div></div>
       </div>
     </div>
-
     <div class="link-box" id="linkBox">
       <div class="link-label">Link dla klienta</div>
       <div class="link-url" id="linkUrl"></div>
       <button class="btn-copy" onclick="copyLink()">Kopiuj link</button>
     </div>
-
     <div class="qr-sec" id="qrSec">
       <div class="qr-tagline-wrap"><div class="qr-tagline" id="qrTagline"></div></div>
       <div class="qr-row">
@@ -250,40 +228,33 @@ async function generate(){
   allGemsArr=[...gems];
   if(cg)cg.split(',').forEach(g=>{const t=g.trim();if(t)allGemsArr.push(t);});
   if(!allGemsArr.length){setErr('Wybierz lub wpisz przynajmniej jeden kamień.');return;}
-
   const btn=document.getElementById('genBtn');
   btn.disabled=true;btn.textContent='✦  Generowanie...  ✦';
   document.getElementById('emptyState').style.display='none';
   document.getElementById('card').classList.add('on');
-
   const descEl=document.getElementById('cardDesc');
   descEl.textContent='Tkam słowa dla Twojego naszyjnika...';
   descEl.classList.add('loading');
-
   const fd=new FormData();
   fd.append('client_name',cName);
   fd.append('gems',allGemsArr.join(', '));
   fd.append('notes',notes);
   if(photoFile)fd.append('photo',photoFile);
-
   try{
     const res=await fetch('/generuj',{method:'POST',body:fd});
     const data=await res.json();
     if(!res.ok||data.error)throw new Error(data.error||'Błąd serwera');
-
     desc=data.description;
     tagline=data.tagline;
     cNum=data.numer;
     cDate=data.date;
     cardUrl=window.location.origin+'/naszyjnik/'+cNum;
-
     document.getElementById('cardTitle').textContent=cName?`Twój naszyjnik, ${cName}`:'Twój wyjątkowy naszyjnik';
     document.getElementById('cardDate').textContent=cDate;
     document.getElementById('cardNum').textContent=cNum;
     document.getElementById('cardStones').innerHTML=allGemsArr.map(g=>`<span class="stone">✦ ${g}</span>`).join('');
     descEl.textContent=desc;
     descEl.classList.remove('loading');
-
     document.getElementById('linkUrl').textContent=cardUrl;
     document.getElementById('linkBox').classList.add('on');
     buildQR();
@@ -319,33 +290,68 @@ function dlQR(){
   const a=document.createElement('a');a.download='virelia-qr-'+cNum+'.png';a.href=out.toDataURL('image/png');a.click();
 }
 
+function dlLabel(){
+  if(!cardUrl){alert('Najpierw wygeneruj opis.');return;}
+  const PPM=11.811;
+  const W=Math.round(62*PPM);
+  const H=Math.round(60*PPM);
+  const cv=document.createElement('canvas');
+  cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';
+  ctx.fillStyle='#1a1a1a';
+  ctx.font='600 22px Georgia,serif';
+  ctx.fillText('VIRELIA JEWELRY',W/2,38);
+  ctx.strokeStyle='#C9A84C';
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(W*0.15,48);ctx.lineTo(W*0.85,48);ctx.stroke();
+  const qrCanvas=document.getElementById('qrFrame').querySelector('canvas');
+  if(qrCanvas){
+    const qrSize=Math.round(H*0.52);
+    const qrX=(W-qrSize)/2;
+    const qrY=Math.round(H*0.19);
+    ctx.drawImage(qrCanvas,qrX,qrY,qrSize,qrSize);
+  }
+  ctx.strokeStyle='#C9A84C';
+  ctx.lineWidth=0.8;
+  ctx.beginPath();ctx.moveTo(W*0.15,H-68);ctx.lineTo(W*0.85,H-68);ctx.stroke();
+  ctx.fillStyle='#444444';
+  ctx.font='italic 400 18px Georgia,serif';
+  ctx.fillText('Zeskanuj i odkryj historię',W/2,H-48);
+  ctx.fillText('swojego naszyjnika \u2756',W/2,H-26);
+  const a=document.createElement('a');
+  a.download='virelia-etykieta-'+cNum+'.png';
+  a.href=cv.toDataURL('image/png',1);
+  a.click();
+}
+
 function dlCard(){
   if(!desc){alert('Najpierw wygeneruj opis.');return;}
   const W=1200,H=1850,cv=document.createElement('canvas');
   cv.width=W;cv.height=H;
   const ctx=cv.getContext('2d');
   ctx.fillStyle='#08080E';ctx.fillRect(0,0,W,H);
-  const draw=()=>{
-    ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1.5;ctx.strokeRect(28,28,W-56,H-56);
-    ctx.strokeStyle='rgba(201,168,76,0.1)';ctx.lineWidth=1;ctx.strokeRect(36,36,W-72,H-72);
-    ctx.textAlign='center';
-    ctx.fillStyle='#C9A84C';ctx.font='600 46px Georgia,serif';ctx.fillText('VIRELIA JEWELRY',W/2,108);
-    ctx.fillStyle='rgba(201,168,76,0.5)';ctx.font='300 22px Georgia,serif';ctx.fillText('Biżuteria z Naturalnych Kamieni',W/2,142);
-    ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(90,165);ctx.lineTo(W-90,165);ctx.stroke();
-    let y=195;
-    const cardImgEl=document.getElementById('cardImg');
-    if(cardImgEl.src&&cardImgEl.style.display!=='none'){
-      const img=new Image();
-      img.onload=function(){
-        const mh=520,mw=W-160,sc=Math.min(mw/img.width,mh/img.height);
-        const dw=img.width*sc,dh=img.height*sc,dx=(W-dw)/2;
-        ctx.save();ctx.beginPath();ctx.roundRect(dx,y,dw,dh,5);ctx.clip();
-        ctx.drawImage(img,dx,y,dw,dh);ctx.restore();
-        y+=dh+55;finish(ctx,W,y,cv);
-      };img.src=cardImgEl.src;
-    }else{finish(ctx,W,y,cv);}
-  };draw();
+  ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1.5;ctx.strokeRect(28,28,W-56,H-56);
+  ctx.strokeStyle='rgba(201,168,76,0.1)';ctx.lineWidth=1;ctx.strokeRect(36,36,W-72,H-72);
+  ctx.textAlign='center';
+  ctx.fillStyle='#C9A84C';ctx.font='600 46px Georgia,serif';ctx.fillText('VIRELIA JEWELRY',W/2,108);
+  ctx.fillStyle='rgba(201,168,76,0.5)';ctx.font='300 22px Georgia,serif';ctx.fillText('Biżuteria z Naturalnych Kamieni',W/2,142);
+  ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(90,165);ctx.lineTo(W-90,165);ctx.stroke();
+  let y=195;
+  const cardImgEl=document.getElementById('cardImg');
+  if(cardImgEl.src&&cardImgEl.style.display!=='none'){
+    const img=new Image();
+    img.onload=function(){
+      const mh=520,mw=W-160,sc=Math.min(mw/img.width,mh/img.height);
+      const dw=img.width*sc,dh=img.height*sc,dx=(W-dw)/2;
+      ctx.save();ctx.beginPath();ctx.roundRect(dx,y,dw,dh,5);ctx.clip();
+      ctx.drawImage(img,dx,y,dw,dh);ctx.restore();
+      y+=dh+55;finish(ctx,W,y,cv);
+    };img.src=cardImgEl.src;
+  }else{finish(ctx,W,y,cv);}
 }
 
 function finish(ctx,W,y,cv){
@@ -372,43 +378,6 @@ function finish(ctx,W,y,cv){
   ctx.fillStyle='rgba(201,168,76,0.45)';ctx.font='600 15px Georgia,serif';
   ctx.fillText('VIRELIA JEWELRY  ·  BIŻUTERIA Z NATURALNYCH KAMIENI',W/2,y);
   const a=document.createElement('a');a.download='virelia-karta-'+cNum+'.png';a.href=cv.toDataURL('image/png',1);a.click();
-
-function dlLabel(){
-  if(!cardUrl){alert("Najpierw wygeneruj opis.");return;}
-  const PX_PER_MM=11.811;
-  const W=Math.round(62*PX_PER_MM);
-  const H=Math.round(60*PX_PER_MM);
-  const cv=document.createElement("canvas");
-  cv.width=W;cv.height=H;
-  const ctx=cv.getContext("2d");
-  ctx.fillStyle="#ffffff";
-  ctx.fillRect(0,0,W,H);
-  ctx.textAlign="center";
-  ctx.fillStyle="#1a1a1a";
-  ctx.font="600 22px Georgia,serif";
-  ctx.fillText("VIRELIA JEWELRY",W/2,38);
-  ctx.strokeStyle="#C9A84C";
-  ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(W*0.15,48);ctx.lineTo(W*0.85,48);ctx.stroke();
-  const qrCanvas=document.getElementById("qrFrame").querySelector("canvas");
-  if(qrCanvas){
-    const qrSize=Math.round(H*0.52);
-    const qrX=(W-qrSize)/2;
-    const qrY=Math.round(H*0.19);
-    ctx.drawImage(qrCanvas,qrX,qrY,qrSize,qrSize);
-  }
-  ctx.strokeStyle="#C9A84C";
-  ctx.lineWidth=0.8;
-  ctx.beginPath();ctx.moveTo(W*0.15,H-68);ctx.lineTo(W*0.85,H-68);ctx.stroke();
-  ctx.fillStyle="#444444";
-  ctx.font="italic 400 18px Georgia,serif";
-  ctx.fillText("Zeskanuj i odkryj historiu0119",W/2,H-48);
-  ctx.fillText("swojego naszyjnika u2756",W/2,H-26);
-  const a=document.createElement("a");
-  a.download="virelia-etykieta-"+cNum+".png";
-  a.href=cv.toDataURL("image/png",1);
-  a.click();
-}
 }
 </script>
 </body>
