@@ -72,12 +72,12 @@ nav.scrolled::before{background:rgba(12,10,8,0.92);backdrop-filter:blur(16px)}
 .sentence-quote{font-size:clamp(22px,3vw,36px);font-weight:200;font-style:italic;line-height:1.6;color:var(--gold-l);max-width:800px;margin:0 auto 1.5rem}
 .sentence-author{font-family:'Cinzel',serif;font-size:9px;font-weight:300;letter-spacing:0.3em;color:rgba(201,168,76,0.4);text-transform:uppercase}
 .about{display:grid;grid-template-columns:1fr 1fr;max-width:1200px;margin:0 auto;padding:8rem 3.5rem;gap:6rem;align-items:center}
-.about-imgs{display:grid;grid-template-columns:1fr 1fr;gap:1rem;height:420px}
-.about-img-big{grid-row:span 2;border-radius:1px;overflow:hidden}
-.about-img-big img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.8s ease-out}
+.about-imgs{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.about-img-big{grid-row:span 2;border-radius:1px;overflow:hidden;min-height:420px}
+.about-img-big img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;transition:transform 0.8s ease-out;background:var(--ink-3)}
 .about-img-big:hover img{transform:scale(1.04)}
-.about-img-sm{border-radius:1px;overflow:hidden}
-.about-img-sm img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.8s ease-out}
+.about-img-sm{border-radius:1px;overflow:hidden;min-height:200px}
+.about-img-sm img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;transition:transform 0.8s ease-out;background:var(--ink-3)}
 .about-img-sm:hover img{transform:scale(1.04)}
 .about-text{display:flex;flex-direction:column;gap:1.8rem}
 .section-eyebrow{font-family:'Cinzel',serif;font-size:9px;font-weight:300;letter-spacing:0.35em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:1rem}
@@ -130,12 +130,12 @@ nav.scrolled::before{background:rgba(12,10,8,0.92);backdrop-filter:blur(16px)}
 .modal-title span{font-size:0.7em}
 .modal-price{font-family:'Cinzel',serif;font-size:18px;font-weight:400;letter-spacing:0.1em;color:var(--gold)}
 .modal-divider{height:0.5px;background:linear-gradient(to right,rgba(201,168,76,0.3),transparent)}
-.modal-short{font-size:16px;font-weight:300;font-style:italic;color:var(--cream-m);line-height:1.7}
-.modal-desc{font-size:15px;font-weight:300;color:var(--stone-l);line-height:1.8}
-.modal-stones-title{font-family:'Cinzel',serif;font-size:9px;font-weight:300;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase}
+.modal-short{font-size:18px;font-weight:400;font-style:italic;color:var(--cream);line-height:1.8;font-family:'Cormorant Garamond',Georgia,serif}
+.modal-desc{font-size:17px;font-weight:400;color:var(--cream-m);line-height:1.85;font-family:'Cormorant Garamond',Georgia,serif}
+.modal-stones-title{font-family:'Cinzel',serif;font-size:9px;font-weight:400;letter-spacing:0.28em;color:var(--gold);text-transform:uppercase;margin-bottom:0.3rem}
 .modal-stones{display:flex;flex-direction:column;gap:0.6rem}
-.modal-stone-item{display:flex;align-items:flex-start;gap:0.7rem;font-size:14px;font-weight:300;color:var(--cream-m);line-height:1.6}
-.modal-stone-item strong{color:var(--cream);font-weight:400}
+.modal-stone-item{display:flex;align-items:flex-start;gap:0.7rem;font-size:16px;font-weight:400;color:var(--cream);line-height:1.7;font-family:'Cormorant Garamond',Georgia,serif}
+.modal-stone-item strong{color:var(--gold-l);font-weight:600;font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.06em}
 .modal-stone-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0;margin-top:7px}
 .modal-cta{display:flex;align-items:center;justify-content:center;gap:0.6rem;font-family:'Cinzel',serif;font-size:10px;font-weight:400;letter-spacing:0.22em;color:var(--ink);background:var(--gold);text-decoration:none;padding:0.9rem 1.5rem;text-transform:uppercase;transition:background 0.3s,transform 0.2s;margin-top:0.5rem}
 .modal-cta:hover{background:var(--gold-l);transform:translateY(-2px)}
@@ -187,7 +187,6 @@ footer{background:var(--ink);border-top:0.5px solid rgba(201,168,76,0.12);paddin
     <div class="nav-links">
       <a href="#o-mnie">O mnie</a>
       <a href="#kolekcja">Kolekcja</a>
-      <a href="/generator">Generator</a>
       <a href="https://www.instagram.com/virelia.jewelry" class="nav-ig">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
         Instagram
@@ -431,7 +430,6 @@ footer{background:var(--ink);border-top:0.5px solid rgba(201,168,76,0.12);paddin
       <div class="footer-links">
         <a href="#o-mnie">O mnie</a>
         <a href="#kolekcja">Kolekcja</a>
-        <a href="/generator">Generator</a>
         <a href="https://www.instagram.com/virelia.jewelry" class="footer-ig">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
           @virelia.jewelry
